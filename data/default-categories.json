@@ -1,0 +1,14 @@
+[
+  { "id": "cat_food",          "name": "Food & Groceries",  "icon": "🛒", "color": "#4CAF50", "type": "expense", "budgetLimit": 500  },
+  { "id": "cat_transport",     "name": "Transport",         "icon": "🚗", "color": "#2196F3", "type": "expense", "budgetLimit": 200  },
+  { "id": "cat_housing",       "name": "Housing & Rent",    "icon": "🏠", "color": "#9C27B0", "type": "expense", "budgetLimit": 1500 },
+  { "id": "cat_health",        "name": "Health & Medical",  "icon": "🏥", "color": "#F44336", "type": "expense", "budgetLimit": 150  },
+  { "id": "cat_entertainment", "name": "Entertainment",     "icon": "🎮", "color": "#FF9800", "type": "expense", "budgetLimit": 100  },
+  { "id": "cat_utilities",     "name": "Utilities & Bills", "icon": "💡", "color": "#00BCD4", "type": "expense", "budgetLimit": 200  },
+  { "id": "cat_shopping",      "name": "Shopping",          "icon": "🛍️", "color": "#E91E63", "type": "expense", "budgetLimit": 300  },
+  { "id": "cat_education",     "name": "Education",         "icon": "📚", "color": "#3F51B5", "type": "expense", "budgetLimit": 100  },
+  { "id": "cat_salary",        "name": "Salary",            "icon": "💼", "color": "#00D68F", "type": "income",  "budgetLimit": 0    },
+  { "id": "cat_freelance",     "name": "Freelance",         "icon": "💻", "color": "#00BFA5", "type": "income",  "budgetLimit": 0    },
+  { "id": "cat_investment",    "name": "Investments",       "icon": "📈", "color": "#FFB74D", "type": "income",  "budgetLimit": 0    },
+  { "id": "cat_other",         "name": "Other",             "icon": "📦", "color": "#78909C", "type": "expense", "budgetLimit": 50   }
+]

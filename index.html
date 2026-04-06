@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Expense Tracker - Personal finance management with subscription">
+  <title>Expense Tracker</title>
+
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="assets/css/reset.css">
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/typography.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <link rel="stylesheet" href="assets/css/transactions.css">
+  <link rel="stylesheet" href="assets/css/modals.css">
+  <link rel="stylesheet" href="assets/css/charts.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
+
+  <!-- Main App Script -->
+  <script type="module" src="assets/js/app.js"></script>
+</head>
+<body>
+  <!-- Trial/Subscription Banner -->
+  <div class="trial-banner" id="trial-banner" style="display: none;"></div>
+
+  <div class="app">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="#dashboard" class="sidebar-logo">
+          <div class="sidebar-logo-icon">💰</div>
+          <span class="sidebar-logo-text">Expense Tracker</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#dashboard" class="sidebar-nav-item active" aria-label="Dashboard">
+          <span class="sidebar-nav-icon">📊</span>
+          <span class="sidebar-nav-label">Dashboard</span>
+        </a>
+        <a href="#transactions" class="sidebar-nav-item" aria-label="Transactions">
+          <span class="sidebar-nav-icon">💳</span>
+          <span class="sidebar-nav-label">Transactions</span>
+        </a>
+        <a href="#categories" class="sidebar-nav-item" aria-label="Categories">
+          <span class="sidebar-nav-icon">🏷️</span>
+          <span class="sidebar-nav-label">Categories</span>
+        </a>
+        <a href="#budgets" class="sidebar-nav-item" aria-label="Budgets">
+          <span class="sidebar-nav-icon">🎯</span>
+          <span class="sidebar-nav-label">Budgets</span>
+        </a>
+        <a href="#reports" class="sidebar-nav-item" aria-label="Reports">
+          <span class="sidebar-nav-icon">📈</span>
+          <span class="sidebar-nav-label">Reports</span>
+        </a>
+        <a href="#settings" class="sidebar-nav-item" aria-label="Settings">
+          <span class="sidebar-nav-icon">⚙️</span>
+          <span class="sidebar-nav-label">Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <!-- User Info -->
+        <div id="user-info" style="margin-bottom: 12px; display: none;">
+          <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Logged in as</div>
+          <div id="user-name" style="font-size: 14px; color: var(--text-primary); font-weight: 500;"></div>
+          <div id="subscription-status" style="font-size: 11px; color: var(--text-muted); margin-top: 4px;"></div>
+        </div>
+
+        <button class="btn btn-primary" id="sidebar-add-btn" style="width: 100%; margin-bottom: 8px;">
+          <span>+</span> Add Transaction
+        </button>
+        <button class="btn btn-secondary" id="subscription-btn" style="width: 100%; margin-bottom: 8px; display: none;">
+          💎 Subscription
+        </button>
+        <button class="btn btn-ghost" id="logout-btn" style="width: 100%; display: none;">
+          🚪 Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <h1 class="header-title">Dashboard</h1>
+          <span class="header-date" id="current-date"></span>
+        </div>
+        <div class="header-right">
+          <button class="btn btn-icon theme-toggle" aria-label="Toggle theme">🌓</button>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="content">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+          <!-- Summary Cards -->
+          <div class="dashboard-grid">
+            <div class="summary-card balance">
+              <div class="summary-card-label">Total Balance</div>
+              <div class="summary-card-value" id="summary-balance">₹0.00</div>
+              <div class="summary-card-change">Available funds</div>
+            </div>
+            <div class="summary-card income">
+              <div class="summary-card-label">This Month Income</div>
+              <div class="summary-card-value" id="summary-income">₹0.00</div>
+              <div class="summary-card-change">Revenue</div>
+            </div>
+            <div class="summary-card expense">
+              <div class="summary-card-label">This Month Expenses</div>
+              <div class="summary-card-value" id="summary-expense">₹0.00</div>
+              <div class="summary-card-change">Spending</div>
+            </div>
+            <div class="summary-card savings">
+              <div class="summary-card-label">Savings Rate</div>
+              <div class="summary-card-value" id="summary-savings">0%</div>
+              <div class="summary-card-change">Of income saved</div>
+            </div>
+          </div>
+
+          <!-- UPI Payment Summary -->
+          <div class="upi-summary-section">
+            <div class="card-header">
+              <h3 class="card-title">📱 UPI Payment Summary</h3>
+              <span class="upi-total" id="upi-total-spent">₹0.00 spent via UPI</span>
+            </div>
+            <div class="upi-grid" id="upi-payment-grid">
+              <!-- Dynamic content -->
+            </div>
+          </div>
+
+          <!-- Charts Grid -->
+          <div class="charts-grid">
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <h3 class="chart-card-title">Spending by Category</h3>
+              </div>
+              <div class="chart-container donut-chart-container">
+                <canvas id="donut-chart" class="chart-canvas"></canvas>
+              </div>
+            </div>
+
+            <div class="top-categories">
+              <div class="card-header">
+                <h3 class="card-title">Top Spending Categories</h3>
+              </div>
+              <div class="top-categories-list" id="top-categories-list">
+                <!-- Dynamic content -->
+              </div>
+            </div>
+
+            <div class="chart-card wide">
+              <div class="chart-card-header">
+                <h3 class="chart-card-title">Monthly Income vs Expenses</h3>
+              </div>
+              <div class="chart-container">
+                <canvas id="bar-chart" class="chart-canvas"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card wide">
+              <div class="chart-card-header">
+                <h3 class="chart-card-title">Daily Spending Trend</h3>
+              </div>
+              <div class="chart-container">
+                <canvas id="line-chart" class="chart-canvas"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Section -->
+          <div class="dashboard-bottom">
+            <div class="recent-transactions">
+              <div class="card-header">
+                <h3 class="card-title">Recent Transactions</h3>
+                <a href="#transactions" class="btn btn-ghost btn-sm">View All</a>
+              </div>
+              <div id="recent-transactions-list">
+                <!-- Dynamic content -->
+              </div>
+            </div>
+
+            <div class="top-categories">
+              <div class="card-header">
+                <h3 class="card-title">Budget Progress</h3>
+                <a href="#budgets" class="btn btn-ghost btn-sm">Manage</a>
+              </div>
+              <div class="budget-progress-grid" id="budget-progress-grid">
+                <!-- Dynamic content -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Transactions Section -->
+        <section id="transactions" class="section">
+          <div class="page-header">
+            <h2 class="page-title">Transactions</h2>
+            <div class="page-actions">
+              <button class="btn btn-secondary" id="export-csv-btn">Export CSV</button>
+              <button class="btn btn-primary" id="add-transaction-btn">+ Add Transaction</button>
+            </div>
+          </div>
+
+          <!-- Filters Panel -->
+          <div class="filters-panel">
+            <div class="filters-header" onclick="this.parentElement.classList.toggle('collapsed')">
+              <h3 class="filters-title">Filters</h3>
+              <span class="filters-toggle">▼</span>
+            </div>
+            <div class="filters-content">
+              <div class="filter-group">
+                <label class="filter-label">Search</label>
+                <div class="search-container">
+                  <span class="search-icon">🔍</span>
+                  <input type="text" class="form-input search-input" id="filter-search" placeholder="Search transactions...">
+                </div>
+              </div>
+
+              <div class="filter-group">
+                <label class="filter-label">Date Range</label>
+                <div class="date-range">
+                  <input type="date" class="form-input" id="filter-start-date">
+                  <span class="date-range-separator">to</span>
+                  <input type="date" class="form-input" id="filter-end-date">
+                </div>
+              </div>
+
+              <div class="filter-group">
+                <label class="filter-label">Type</label>
+                <div class="type-toggle">
+                  <button class="type-toggle-btn active" data-type="all">All</button>
+                  <button class="type-toggle-btn" data-type="income">Income</button>
+                  <button class="type-toggle-btn" data-type="expense">Expense</button>
+                </div>
+              </div>
+
+              <div class="filter-group">
+                <label class="filter-label">Payment Method</label>
+                <select class="form-input" id="filter-payment-method">
+                  <option value="all">All Methods</option>
+                  <option value="cash">💵 Cash</option>
+                  <option value="paytm">📱 Paytm</option>
+                  <option value="phonepe">🟣 PhonePe</option>
+                  <option value="gpay">🔵 Google Pay</option>
+                  <option value="amazonpay">🟠 Amazon Pay</option>
+                  <option value="bhim">🟢 BHIM</option>
+                  <option value="other_upi">📲 Other UPI</option>
+                  <option value="card">💳 Card</option>
+                  <option value="netbanking">🏦 Net Banking</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bulk Actions -->
+          <div class="bulk-actions" id="bulk-actions" style="display: none;">
+            <span class="bulk-actions-count" id="bulk-actions-count">0 selected</span>
+            <span class="bulk-actions-divider"></span>
+            <button class="btn btn-danger btn-sm" id="delete-selected">Delete Selected</button>
+          </div>
+
+          <!-- Transactions Table -->
+          <div class="transactions-table-container">
+            <div class="transactions-toolbar">
+              <div class="transactions-search">
+                <div class="search-container">
+                  <span class="search-icon">🔍</span>
+                  <input type="text" class="form-input search-input" id="toolbar-search" placeholder="Quick search...">
+                </div>
+              </div>
+              <div class="transactions-actions">
+                <button class="btn btn-ghost btn-sm" id="select-all">Select All</button>
+              </div>
+            </div>
+
+            <table class="transactions-table">
+              <thead>
+                <tr>
+                  <th class="cell-checkbox">
+                    <input type="checkbox" id="select-all-checkbox">
+                  </th>
+                  <th class="sortable" data-sort="date">Date</th>
+                  <th class="sortable" data-sort="category">Category</th>
+                  <th class="sortable" data-sort="description">Description</th>
+                  <th class="sortable" data-sort="amount">Amount</th>
+                  <th>Payment Method</th>
+                  <th>Tags</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="transactions-table-body">
+                <!-- Dynamic content -->
+              </tbody>
+            </table>
+
+            <div class="pagination">
+              <span class="pagination-info" id="pagination-info">Showing 0 of 0</span>
+              <div class="pagination-controls" id="pagination-controls">
+                <!-- Dynamic content -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section id="categories" class="section">
+          <div class="page-header">
+            <h2 class="page-title">Categories</h2>
+            <div class="page-actions">
+              <button class="btn btn-primary" id="add-category-btn">+ Add Category</button>
+            </div>
+          </div>
+
+          <div class="card-grid" id="categories-grid">
+            <!-- Dynamic content -->
+          </div>
+        </section>
+
+        <!-- Budgets Section -->
+        <section id="budgets" class="section">
+          <div class="page-header">
+            <h2 class="page-title">Budgets</h2>
+          </div>
+
+          <div class="card-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Monthly Budget</h3>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Total Monthly Budget</label>
+                <div class="amount-input-wrapper">
+                  <span class="currency-symbol">₹</span>
+                  <input type="number" class="form-input" id="monthly-budget" placeholder="0.00" step="0.01">
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Alert Settings</h3>
+              </div>
+              <div class="form-group">
+                <label class="toggle">
+                  <span>Enable Budget Alerts</span>
+                  <div class="toggle-switch" id="alerts-toggle">
+                    <div class="toggle-slider"></div>
+                  </div>
+                  <input type="checkbox" id="alerts-enabled" hidden>
+                </label>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Alert Threshold (%)</label>
+                <input type="number" class="form-input" id="alert-threshold" min="1" max="100" value="80">
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top: 24px;">
+            <div class="card-header">
+              <h3 class="card-title">Category Budgets</h3>
+            </div>
+            <div id="category-budgets-list">
+              <!-- Dynamic content -->
+            </div>
+          </div>
+        </section>
+
+        <!-- Reports Section -->
+        <section id="reports" class="section">
+          <div class="page-header">
+            <h2 class="page-title">Reports</h2>
+            <div class="page-actions">
+              <button class="btn btn-secondary" id="export-csv">Export CSV</button>
+              <button class="btn btn-secondary" id="export-json">Export JSON</button>
+            </div>
+          </div>
+
+          <div class="card-grid">
+            <div class="card wide">
+              <div class="card-header">
+                <h3 class="card-title">Monthly Summary</h3>
+              </div>
+              <div class="table-container">
+                <table class="transactions-table">
+                  <thead>
+                    <tr>
+                      <th>Month</th>
+                      <th>Income</th>
+                      <th>Expenses</th>
+                      <th>Net</th>
+                      <th>Transactions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="monthly-summary-table">
+                    <!-- Dynamic content -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card wide">
+              <div class="card-header">
+                <h3 class="card-title">Category Breakdown (This Month)</h3>
+              </div>
+              <div class="table-container">
+                <table class="transactions-table">
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th>Transactions</th>
+                      <th>Amount</th>
+                      <th>% of Total</th>
+                    </tr>
+                  </thead>
+                  <tbody id="category-breakdown-table">
+                    <!-- Dynamic content -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="settings" class="section">
+          <div class="page-header">
+            <h2 class="page-title">Settings</h2>
+          </div>
+
+          <div class="card-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Preferences</h3>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Currency</label>
+                <select class="form-select" id="setting-currency">
+                  <option value="INR" data-symbol="₹">INR (₹)</option>
+                  <option value="USD" data-symbol="$">USD ($)</option>
+                  <option value="EUR" data-symbol="€">EUR (€)</option>
+                  <option value="GBP" data-symbol="£">GBP (£)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Date Format</label>
+                <select class="form-select" id="setting-date-format">
+                  <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                  <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                  <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Theme</label>
+                <select class="form-select" id="setting-theme">
+                  <option value="dark">Dark</option>
+                  <option value="light">Light</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Start of Month (Day)</label>
+                <input type="number" class="form-input" id="setting-start-of-month" min="1" max="28" value="1">
+              </div>
+
+              <button class="btn btn-primary" id="save-settings">Save Settings</button>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Subscription</h3>
+              </div>
+              <div id="subscription-info" style="margin-bottom: 16px;">
+                <!-- Dynamic subscription info -->
+              </div>
+              <button class="btn btn-primary" id="manage-subscription-btn" style="width: 100%; margin-bottom: 12px;">
+                Manage Subscription
+              </button>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Data Management</h3>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Export Data</label>
+                <div style="display: flex; gap: 12px;">
+                  <button class="btn btn-secondary" id="export-csv-settings">Export CSV</button>
+                  <button class="btn btn-secondary" id="export-json-settings">Export JSON Backup</button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Import Data</label>
+                <input type="file" id="import-file" accept=".json" hidden>
+                <button class="btn btn-secondary" id="import-json">Import JSON Backup</button>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="form-group">
+                <label class="form-label">Demo Data</label>
+                <button class="btn btn-secondary" id="load-demo">Load Demo Data</button>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="form-group">
+                <label class="form-label text-red">Danger Zone</label>
+                <button class="btn btn-danger" id="clear-data">Clear All Data</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Quick Add Button -->
+    <button class="quick-add-btn" id="quick-add-btn" aria-label="Add transaction">+</button>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script>
+    // Set current date in header
+    const dateEl = document.getElementById('current-date');
+    if (dateEl) {
+      dateEl.textContent = new Date().toLocaleDateString('en-IN', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
+  </script>
+</body>
+</html>
